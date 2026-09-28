@@ -44,12 +44,12 @@ The module only uses the built-in headset service and the public broadcast inter
 
 Sony, Huawei and OPPO headsets require the corresponding third-party module; this module does not provide that compatibility on its own.
 
-Headsets that only toggle noise cancelling without transparency (for example HUAWEI FreeBuds 5) will just switch noise cancelling on and off.
+Headsets that only toggle noise cancelling without transparency (for example HUAWEI FreeBuds 5): set "Headset cycle mode" on the home screen to "Noise cancelling + Off", and the button only turns noise cancelling on and off instead of trying a transparency mode the headset cannot do.
 
 ## Features
 
 - **Volume panel button** — a third instance button next to silent and DND for switching headset noise control
-- **Three states** — noise cancelling, transparency and off, with a choice between a two state (NC ⇄ transparency) and a three state (NC → transparency → off) cycle
+- **Three states** — noise cancelling, transparency and off, with a cycle mode that matches your headset: NC ⇄ transparency, NC ⇄ off (for headsets without transparency), or the three state NC → transparency → off
 - **Matching icons** — ring for noise cancelling, dots for transparency, adaptive glyph for off, using the same palette as the rest of the volume panel
 - **Disconnect** — expanding the headset menu in the volume panel lets you disconnect the connected headset
 - **Focus notification** — switching to noise cancelling or transparency shows a status bar strong toast with the matching icon; switching off stays silent. Can be turned off in Settings
@@ -90,13 +90,13 @@ The first launch runs a four step guide (welcome → developer → terms → don
 
 Requirements:
 
-- JDK 17
+- JDK 21 (the GitHub Actions workflow uses 21)
 - Android SDK Platform 37 (`compileSdk = 37`)
 - Kotlin 2.3.x with the Compose plugin
 
 ```powershell
 .\gradlew.bat assembleDebug     # keeps logging, useful for troubleshooting
-.\gradlew.bat assembleRelease   # R8 shrinking with all log calls stripped
+.\gradlew.bat assembleRelease   # R8 shrinking; only v/d logs are stripped, i/w/e stay
 ```
 
 Dependencies: Compose Multiplatform 1.11, Miuix 0.9.3, AndroidLiquidGlass (`io.github.kyant0:backdrop` / `shapes`) and libxposed API 102.

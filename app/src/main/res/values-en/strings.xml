@@ -114,7 +114,7 @@
     <!-- About -->
     <string name="about_tagline">Version %1$s · tested on Xiaomi HyperOS 4</string>
     <string name="about_feature_title">What it does</string>
-    <string name="about_feature_body">Adds a third instance button next to silent and DND in the HyperOS 4 volume panel so noise cancelling, transparency and off can be switched directly. Expanding the headset menu in the volume panel also lets you disconnect the connected headset.</string>
+    <string name="about_feature_body">Adds a third instance button next to silent and DND in the HyperOS 4 volume panel so noise cancelling, transparency and off can be switched directly. A cycle mode can be picked to match your headset (NC ⇄ transparency, NC ⇄ off, or NC → transparency → off). Expanding the headset menu in the volume panel also lets you disconnect the connected headset.</string>
     <string name="about_developer_label">Developer</string>
     <string name="about_developer_tip_title">A note from the developer</string>
     <string name="about_developer_tip_body">This module started with a simple idea: a more intuitive and quicker way to switch noise cancelling. If you run into problems, feel free to ask in the group or open an issue on GitHub. If it works well for you, a star is more than enough.</string>
@@ -164,7 +164,7 @@
     <!-- Onboarding -->
     <string name="oobe_welcome_subtitle">A quick noise control button for the HyperOS 4 volume panel</string>
     <string name="oobe_welcome_point_1">Adds one more instance button next to silent and DND so noise cancelling is one tap away</string>
-    <string name="oobe_welcome_point_2">Supports noise cancelling, transparency and off, with an optional three state cycle</string>
+    <string name="oobe_welcome_point_2">Supports noise cancelling, transparency and off, with a cycle mode that matches your headset</string>
     <string name="oobe_welcome_point_3">Expanding the headset menu in the volume panel lets you disconnect the headset directly</string>
     <string name="oobe_developer_name">zhhhyyyyyy</string>
     <string name="oobe_developer_project_title">Project link</string>

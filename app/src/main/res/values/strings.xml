@@ -115,7 +115,7 @@
     <!-- 关于 -->
     <string name="about_tagline">版本 %1$s · 测试于小米澎湃 OS 4</string>
     <string name="about_feature_title">功能说明</string>
-    <string name="about_feature_body">添加澎湃OS4音量条除静音和勿扰外的第三个实例按钮来支持降噪通透与关闭三种状态的切换；展开音量条耳机菜单还可以直接断开已连接耳机</string>
+    <string name="about_feature_body">添加澎湃OS4音量条除静音和勿扰外的第三个实例按钮来支持降噪通透与关闭三种状态的切换；可按自己的耳机选择循环方式（降噪 ⇄ 通透 / 降噪 ⇄ 关闭 / 降噪 → 通透 → 关闭）；展开音量条耳机菜单还可以直接断开已连接耳机</string>
     <string name="about_developer_label">开发者</string>
     <string name="about_developer_tip_title">开发者的话</string>
     <string name="about_developer_tip_body">这个模块最初只是想增加一种更符合直觉且更便捷的降噪切换按钮。使用中遇到问题欢迎到群里反馈，也欢迎去 GitHub 提 Issue；如果你觉得好用，帮忙点个 Star 就足够了。</string>
@@ -165,7 +165,7 @@
     <!-- 首次启动引导 -->
     <string name="oobe_welcome_subtitle">澎湃 OS 4 音量条上的降噪快捷按钮</string>
     <string name="oobe_welcome_point_1">音量面板新增一个实例按钮，在静音与勿扰之外快速切换降噪</string>
-    <string name="oobe_welcome_point_2">支持降噪、通透、关闭三种状态，可按需选择是否循环到关闭</string>
+    <string name="oobe_welcome_point_2">支持降噪、通透、关闭三种状态，可按自己的耳机选择循环方式</string>
     <string name="oobe_welcome_point_3">展开音量面板的耳机菜单，可直接断开当前连接的耳机</string>
     <string name="oobe_developer_name">zhhhyyyyyy</string>
     <string name="oobe_developer_project_title">本项目链接</string>

@@ -6,13 +6,10 @@
 -keepattributes *Annotation*, Exceptions, InnerClasses, Signature, SourceFile, LineNumberTable
 -dontwarn io.github.libxposed.**
 
-## Release builds stay silent: strip every android.util.Log call.
+## Release builds drop only the chatty logs. Warning/error/info calls stay: the module
+## tells users to check the LSPosed log when a switch fails, and the line that shows the
+## current/target ANC mode is logged at info level.
 -assumenosideeffects class android.util.Log {
     public static *** v(...);
     public static *** d(...);
-    public static *** i(...);
-    public static *** w(...);
-    public static *** e(...);
-    public static *** wtf(...);
-    public static *** println(...);
 }
