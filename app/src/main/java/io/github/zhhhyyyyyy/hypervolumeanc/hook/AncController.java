@@ -37,6 +37,11 @@ final class AncController {
     static final int MODE_NOISE_CANCELLING = 1;
     static final int MODE_TRANSPARENCY = 2;
 
+    /** 循环方式常量，取值与 Settings / ModuleConfigProvider 透传的字符串一致。 */
+    private static final String CYCLE_NC_TRANSPARENCY = "nc_transparency";
+    private static final String CYCLE_NC_OFF = "nc_off";
+    private static final String CYCLE_FULL = "full";
+
     private static final String TAG = "HyperVolumeANC";
     private static final String SERVICE_ACTION = "miui.bluetooth.mible.BluetoothHeadsetService";
     private static final String SERVICE_PACKAGE = "com.xiaomi.bluetooth";
@@ -252,7 +257,7 @@ final class AncController {
 
     void attach(VolumeButtonInjector.NativeButton button) {
         bindings.add(new ButtonBinding(button));
-        button.render(currentMode, isButtonAvailable(), HyperVolumeAncSettings.cycleIncludesOff());
+        button.render(currentMode, isButtonAvailable(), HyperVolumeAncSettings.cycleModes());
         ensureBound();
     }
 
@@ -262,7 +267,7 @@ final class AncController {
 
     void applySettings() {
         Log.i(TAG, "module options changed enabled=" + HyperVolumeAncSettings.moduleEnabled()
-                + " includeOff=" + HyperVolumeAncSettings.cycleIncludesOff());
+                + " cycleModes=" + HyperVolumeAncSettings.cycleModes());
         publish(activeDevice, currentMode);
     }
 
@@ -287,7 +292,7 @@ final class AncController {
 
             int mode = readMode(binder, device);
             int target = nextMode(mode, supportsTransparency(),
-                    HyperVolumeAncSettings.cycleIncludesOff());
+                    HyperVolumeAncSettings.cycleModes());
             Log.i(TAG, "changing ANC device=" + safeName(device)
                     + " kind=" + activeDeviceKind + " route=" + activeHuaweiRoute
                     + " current=" + mode + " target=" + target);
@@ -306,9 +311,18 @@ final class AncController {
     }
 
     /**
-     * @param includeOff whether the user asked for the noise cancelling / transparency / off cycle.
+     * 按用户选定的循环方式算出下一个模式。
+     *
+     * nc_off 是给只有降噪、没有通透的耳机用的：模式只在降噪与关闭之间来回，
+     * 因此既不会去碰通透，也不会受 supportsTransparency 判定错误的影响。
+     *
+     * @param cycleModes Settings.CYCLE_* 之一。
      */
-    private int nextMode(int mode, boolean supportsTransparency, boolean includeOff) {
+    private int nextMode(int mode, boolean supportsTransparency, String cycleModes) {
+        if (CYCLE_NC_OFF.equals(cycleModes)) {
+            return mode == MODE_NOISE_CANCELLING ? MODE_OFF : MODE_NOISE_CANCELLING;
+        }
+        boolean includeOff = CYCLE_FULL.equals(cycleModes);
         if (mode == MODE_NOISE_CANCELLING) {
             return supportsTransparency ? MODE_TRANSPARENCY : MODE_OFF;
         }
@@ -619,14 +633,14 @@ final class AncController {
         activeDevice = device;
         currentMode = mode;
         boolean available = device != null && HyperVolumeAncSettings.moduleEnabled();
-        boolean includeOff = HyperVolumeAncSettings.cycleIncludesOff();
+        String cycleModes = HyperVolumeAncSettings.cycleModes();
         mainHandler.post(() -> {
             Iterator<ButtonBinding> iterator = bindings.iterator();
             while (iterator.hasNext()) {
                 ButtonBinding binding = iterator.next();
                 VolumeButtonInjector.NativeButton button = binding.button.get();
                 if (button != null && button.isAlive()) {
-                    button.render(mode, available, includeOff);
+                    button.render(mode, available, cycleModes);
                 } else {
                     bindings.remove(binding);
                 }

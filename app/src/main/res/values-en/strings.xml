@@ -26,11 +26,16 @@
     <string name="home_group_module">Module</string>
     <string name="home_module_enable_title">Volume panel button</string>
     <string name="home_module_enable_summary">Show the noise control row and the disconnect button in the volume panel when a supported headset is connected.</string>
-    <string name="home_cycle_title">Include Off in the cycle</string>
-    <string name="home_cycle_on_summary">On: Noise cancelling → Transparency → Off.</string>
-    <string name="home_cycle_off_summary">Off: switch between noise cancelling and transparency only.</string>
+    <string name="home_cycle_title">Headset cycle mode</string>
+    <string name="home_cycle_summary">Pick how the volume panel button cycles, based on the modes your headset supports.</string>
+    <string name="home_cycle_nc_transparency">Noise cancelling ⇄ Transparency</string>
+    <string name="home_cycle_nc_transparency_summary">Noise cancelling ⇄ Transparency: for headsets that support both; the button toggles between the two.</string>
+    <string name="home_cycle_nc_off">Noise cancelling + Off</string>
+    <string name="home_cycle_nc_off_summary">Noise cancelling → Off: for headsets without a transparency mode; the button only turns noise cancelling on and off.</string>
+    <string name="home_cycle_full">Noise cancelling + Transparency + Off</string>
+    <string name="home_cycle_full_summary">Noise cancelling → Transparency → Off: cycles through all three.</string>
     <string name="home_cycle_disabled_summary">Module disabled.</string>
-    <string name="home_mode_hint">The volume panel button cycles in the order shown above. Headsets that only support noise cancelling will just toggle noise cancelling on and off.</string>
+    <string name="home_mode_hint">The volume panel button cycles in the order shown above. If the cycle mode does not match your headset, the button may try a mode the headset lacks and appear to do nothing.</string>
     <string name="home_group_devices">Supported headsets</string>
     <string name="device_xiaomi">Xiaomi</string>
     <string name="device_xiaomi_note">includes Redmi buds</string>
@@ -104,7 +109,7 @@
     <string name="update_error">Update check failed: %1$s</string>
     <string name="update_open_download">Open download</string>
     <string name="update_recheck">Check again</string>
-    <string name="update_url">https://raw.githubusercontent.com/zhhhyyyyyy/HyperVolumeANC/main/update.json</string>
+    <string name="update_url">https://raw.githubusercontent.com/knightlsy/HyperVolumeANC/main/update.json</string>
 
     <!-- About -->
     <string name="about_tagline">Version %1$s · tested on Xiaomi HyperOS 4</string>

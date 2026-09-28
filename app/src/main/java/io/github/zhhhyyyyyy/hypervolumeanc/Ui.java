@@ -86,8 +86,13 @@ final class Ui {
         return view;
     }
 
-    /** Shows the three listening modes and the order used by the volume panel button. */
-    static LinearLayout modeStrip(Context context, boolean includeOff) {
+    /**
+     * Shows the listening modes and the order the volume panel button walks through them.
+     * For headsets without transparency (cycleModes "nc_off") the transparency column is
+     * removed so the strip reads "noise cancelling → off" instead of implying a mode the
+     * headset cannot do.
+     */
+    static LinearLayout modeStrip(Context context, String cycleModes) {
         LinearLayout strip = new LinearLayout(context);
         strip.setOrientation(LinearLayout.HORIZONTAL);
         strip.setGravity(Gravity.CENTER_VERTICAL);
@@ -102,33 +107,41 @@ final class Ui {
         addModeColumn(strip, transparency, context.getString(R.string.mode_transparency));
         strip.addView(arrow(context));
         addModeColumn(strip, off, context.getString(R.string.mode_off));
-        applyModeStripAlpha(strip, true, includeOff);
+        applyModeStripState(strip, true, cycleModes);
         return strip;
     }
 
     /** Updates the strip created by {@link #modeStrip} when the options change. */
-    static void updateModeStrip(LinearLayout strip, boolean enabled, boolean includeOff) {
+    static void updateModeStrip(LinearLayout strip, boolean enabled, String cycleModes) {
         if (strip.getChildCount() < 5) {
             return;
         }
-        applyModeStripAlpha(strip, enabled, includeOff);
+        applyModeStripState(strip, enabled, cycleModes);
     }
 
     /**
-     * Applies the dimming to the glyph drawables and captions instead of the containers:
-     * view alpha on a ViewGroup is composited in an offscreen layer that can keep a stale
-     * alpha until the screen is rebuilt, which made the icons look washed out.
+     * Applies visibility and dimming to the glyph drawables and captions instead of the
+     * containers: view alpha on a ViewGroup is composited in an offscreen layer that can keep
+     * a stale alpha until the screen is rebuilt, which made the icons look washed out.
      */
-    private static void applyModeStripAlpha(LinearLayout strip, boolean enabled, boolean includeOff) {
+    private static void applyModeStripState(LinearLayout strip, boolean enabled, String cycleModes) {
         Context context = strip.getContext();
         int captionColor = context.getColor(R.color.text_secondary);
         int arrowColor = context.getColor(R.color.text_tertiary);
+        boolean ncOff = "nc_off".equals(cycleModes);
+        boolean full = "full".equals(cycleModes);
         float active = enabled ? 1.0f : 0.3f;
-        float offAlpha = enabled && includeOff ? 1.0f : 0.3f;
+        // 「关闭」只有在循环包含它时才是可用模式；「仅降噪」模式下它就是另一半。
+        float offAlpha = enabled && (full || ncOff) ? 1.0f : 0.3f;
+
+        // 仅降噪模式：隐藏通透列与其后的箭头，示意条读作「降噪 → 关闭」。
+        strip.getChildAt(2).setVisibility(ncOff ? View.GONE : View.VISIBLE);
+        strip.getChildAt(3).setVisibility(ncOff ? View.GONE : View.VISIBLE);
+
         setColumnAlpha(strip, 0, active, captionColor);
         setColumnAlpha(strip, 1, active, arrowColor);
         setColumnAlpha(strip, 2, active, captionColor);
-        setColumnAlpha(strip, 3, offAlpha, arrowColor);
+        setColumnAlpha(strip, 3, ncOff ? active : offAlpha, arrowColor);
         setColumnAlpha(strip, 4, offAlpha, captionColor);
     }
 

@@ -28,8 +28,18 @@ Android 17 的小米澎湃 OS 4 Beta，模块基于 libxposed API 102（LSPosed�
 
 ## 下载
 
-- 从 [Releases](https://github.com/zhhhyyyyyy/HyperVolumeANC/releases/latest) 下载最新 APK，安装后在 LSPosed 中启用模块，并勾选下面两个作用域
-- 应用内「设置 → 更新模块」会读取仓库里的 [update.json](https://raw.githubusercontent.com/zhhhyyyyyy/HyperVolumeANC/main/update.json) 检查新版本，发现更新可以直接跳转下载
+- 从 [Releases](https://github.com/knightlsy/HyperVolumeANC/releases/latest) 下载最新 APK，安装后在 LSPosed 中启用模块，并勾选下面两个作用域
+- 应用内「设置 → 更新模块」会读取仓库里的 [update.json](https://raw.githubusercontent.com/knightlsy/HyperVolumeANC/main/update.json) 检查新版本，发现更新可以直接跳转下载
+
+## 更新日志
+
+### v1.8.0 (2026-09-28)
+
+- 新增「耳机循环模式」选项，取代原来的「循环包含关闭模式」开关。主页「模块」一栏里点开即可三选一：
+  - **降噪 ⇄ 通透**：默认行为，适合同时支持降噪与通透的耳机
+  - **降噪 + 关闭**：适合只有降噪、没有通透模式的耳机，音量面板按钮只在降噪开与关之间切换
+  - **降噪 + 通透 + 关闭**：三种模式依次循环（原「循环包含关闭模式」开启时的行为）
+- 模式示意条会跟着所选循环方式变化：选「降噪 + 关闭」时不再显示耳机会不支持的通透一列
 
 ## 使用前说明
 

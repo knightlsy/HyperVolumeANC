@@ -274,7 +274,7 @@ final class VolumeButtonInjector {
         private boolean expanded;
         private boolean available;
         private int mode = AncController.MODE_OFF;
-        private boolean includeOffMode;
+        private String cycleModes = "nc_transparency";
 
         NativeButton(
                 ViewGroup host,
@@ -356,10 +356,10 @@ final class VolumeButtonInjector {
             return ancRow.getParent() == buttonLayout;
         }
 
-        void render(int mode, boolean available, boolean includeOff) {
+        void render(int mode, boolean available, String cycleModes) {
             this.mode = mode;
             this.available = available;
-            this.includeOffMode = includeOff;
+            this.cycleModes = cycleModes;
             nativeRowAvailable = available;
             nativeExpandedExtraHeight = extraHeight();
             ancRow.setVisibility(available ? View.VISIBLE : View.GONE);
@@ -398,15 +398,19 @@ final class VolumeButtonInjector {
             int tint;
             if (mode == AncController.MODE_TRANSPARENCY) {
                 tint = color(host.getContext(), "vp_o3_dnd_on", 0xFF7767F9);
-                ancBlur.setContentDescription(includeOffMode
+                ancBlur.setContentDescription("full".equals(cycleModes)
                         ? "通透模式，点击切换到关闭"
                         : "通透模式，点击切换降噪模式");
             } else if (mode == AncController.MODE_NOISE_CANCELLING) {
                 tint = color(host.getContext(), "vp_o3_silent_on", 0xFFFF4F3F);
-                ancBlur.setContentDescription("降噪模式，点击切换通透模式");
+                ancBlur.setContentDescription("nc_off".equals(cycleModes)
+                        ? "降噪模式，点击关闭降噪"
+                        : "降噪模式，点击切换通透模式");
             } else {
                 tint = color(host.getContext(), "vp_o3_silent_off", 0xFFFFFFFF);
-                ancBlur.setContentDescription("降噪已关闭，点击开启降噪模式");
+                ancBlur.setContentDescription("nc_off".equals(cycleModes)
+                        ? "降噪已关闭，点击开启降噪"
+                        : "降噪已关闭，点击开启降噪模式");
             }
             ancIcon.setImageTintList(ColorStateList.valueOf(tint));
         }

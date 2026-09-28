@@ -27,11 +27,16 @@
     <string name="home_group_module">模块</string>
     <string name="home_module_enable_title">启用音量面板按钮</string>
     <string name="home_module_enable_summary">连接兼容耳机时，在音量面板显示降噪控制行与断开连接按钮。</string>
-    <string name="home_cycle_title">循环包含关闭模式</string>
-    <string name="home_cycle_on_summary">开启：降噪 → 通透 → 关闭 依次循环。</string>
-    <string name="home_cycle_off_summary">关闭：仅在降噪与通透之间切换。</string>
+    <string name="home_cycle_title">耳机循环模式</string>
+    <string name="home_cycle_summary">选择音量面板按钮的循环方式，按你的耳机支持的降噪模式来选。</string>
+    <string name="home_cycle_nc_transparency">降噪 ⇄ 通透</string>
+    <string name="home_cycle_nc_transparency_summary">降噪 ⇄ 通透：适合同时支持降噪与通透的耳机，在两者之间来回切换。</string>
+    <string name="home_cycle_nc_off">降噪 + 关闭</string>
+    <string name="home_cycle_nc_off_summary">降噪 → 关闭：适合只有降噪、没有通透模式的耳机，点击只切换降噪开与关。</string>
+    <string name="home_cycle_full">降噪 + 通透 + 关闭</string>
+    <string name="home_cycle_full_summary">降噪 → 通透 → 关闭：三种模式依次循环。</string>
     <string name="home_cycle_disabled_summary">模块已停用。</string>
-    <string name="home_mode_hint">点击音量面板的按钮时按上图顺序切换。部分仅支持降噪、不支持通透的耳机，按钮只会在降噪开启与关闭之间切换。</string>
+    <string name="home_mode_hint">点击音量面板的按钮时按上图顺序切换。选错循环方式时，按钮可能会去切换到耳机不支持的模式而看似无反应。</string>
     <string name="home_group_devices">支持的耳机</string>
     <string name="device_xiaomi">Xiaomi</string>
     <string name="device_xiaomi_note">包含 Redmi 耳机</string>
@@ -105,7 +110,7 @@
     <string name="update_error">检查更新失败：%1$s</string>
     <string name="update_open_download">前往下载</string>
     <string name="update_recheck">重新检查</string>
-    <string name="update_url">https://raw.githubusercontent.com/zhhhyyyyyy/HyperVolumeANC/main/update.json</string>
+    <string name="update_url">https://raw.githubusercontent.com/knightlsy/HyperVolumeANC/main/update.json</string>
 
     <!-- 关于 -->
     <string name="about_tagline">版本 %1$s · 测试于小米澎湃 OS 4</string>

@@ -48,6 +48,8 @@ public final class MainActivity extends ComponentActivity {
             Settings.THEME_SYSTEM, Settings.THEME_LIGHT, Settings.THEME_DARK};
     private static final String[] NAV_VALUES = {
             Settings.NAV_HYPER, Settings.NAV_FLOATING, Settings.NAV_GLASS};
+    private static final String[] CYCLE_VALUES = {
+            Settings.CYCLE_NC_TRANSPARENCY, Settings.CYCLE_NC_OFF, Settings.CYCLE_FULL};
 
     private TextView topTitle;
     private View restartButton;
@@ -56,7 +58,6 @@ public final class MainActivity extends ComponentActivity {
     private final View[] pageContents = new View[3];
 
     private Switch moduleSwitch;
-    private Switch cycleSwitch;
     private Switch islandSwitch;
     private Switch hideIconSwitch;
     private TextView cycleSummary;
@@ -487,20 +488,24 @@ public final class MainActivity extends ComponentActivity {
                 getString(R.string.home_module_enable_summary), moduleSwitch, false));
         Ui.addDivider(card);
 
-        cycleSwitch = new Switch(this);
-        cycleSwitch.setOnCheckedChangeListener((button, checked) -> {
-            if (binding) {
-                return;
-            }
-            Settings.setCycleIncludesOff(this, checked);
-            refreshState();
-        });
-        View cycleRow = Ui.row(this, getString(R.string.home_cycle_title), "", cycleSwitch, false);
+        View cycleRow = Ui.row(this, getString(R.string.home_cycle_title),
+                getString(R.string.home_cycle_summary), Ui.chevron(this), true);
         cycleSummary = findSummary(cycleRow);
+        cycleRow.setOnClickListener(view -> ChoiceDialog.show(this,
+                getString(R.string.home_cycle_title),
+                new String[]{
+                        getString(R.string.home_cycle_nc_transparency),
+                        getString(R.string.home_cycle_nc_off),
+                        getString(R.string.home_cycle_full)},
+                ChoiceDialog.indexOf(CYCLE_VALUES, Settings.getCycleModes(this)),
+                index -> {
+                    Settings.setCycleModes(this, CYCLE_VALUES[index]);
+                    refreshState();
+                }));
         card.addView(cycleRow);
         Ui.addDivider(card);
 
-        modeStrip = Ui.modeStrip(this, Settings.cycleIncludesOff(this));
+        modeStrip = Ui.modeStrip(this, Settings.getCycleModes(this));
         card.addView(modeStrip);
         card.addView(Ui.hint(this, getString(R.string.home_mode_hint)));
         return card;
@@ -562,21 +567,20 @@ public final class MainActivity extends ComponentActivity {
     private void refreshState() {
         binding = true;
         boolean enabled = Settings.moduleEnabled(this);
-        boolean includeOff = Settings.cycleIncludesOff(this);
+        String cycleModes = Settings.getCycleModes(this);
         moduleSwitch.setChecked(enabled);
-        cycleSwitch.setChecked(includeOff);
         islandSwitch.setChecked(Settings.islandNotification(this));
         hideIconSwitch.setChecked(Settings.launcherIconHidden(this));
         binding = false;
 
         cycleSummary.setText(enabled
-                ? getString(includeOff
-                ? R.string.home_cycle_on_summary
-                : R.string.home_cycle_off_summary)
+                ? getString(switch (cycleModes) {
+                    case Settings.CYCLE_NC_OFF -> R.string.home_cycle_nc_off_summary;
+                    case Settings.CYCLE_FULL -> R.string.home_cycle_full_summary;
+                    default -> R.string.home_cycle_nc_transparency_summary;
+                })
                 : getString(R.string.home_cycle_disabled_summary));
-        cycleSwitch.setEnabled(enabled);
-        cycleSwitch.setAlpha(enabled ? 1.0f : 0.5f);
-        Ui.updateModeStrip(modeStrip, enabled, includeOff);
+        Ui.updateModeStrip(modeStrip, enabled, cycleModes);
 
         languageSummary.setText(switch (Settings.getLanguage(this)) {
             case Settings.LANGUAGE_ZH -> getString(R.string.settings_language_zh);

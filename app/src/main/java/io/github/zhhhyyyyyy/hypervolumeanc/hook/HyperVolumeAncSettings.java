@@ -17,6 +17,7 @@ final class HyperVolumeAncSettings {
             "io.github.zhhhyyyyyy.hypervolumeanc.action.CONFIG_CHANGED";
     static final String EXTRA_MODULE_ENABLED = "module_enabled";
     static final String EXTRA_CYCLE_INCLUDE_OFF = "cycle_include_off";
+    static final String EXTRA_CYCLE_MODES = "cycle_modes";
     static final String EXTRA_ISLAND_NOTIFICATION = "island_notification";
 
     private static final String TAG = "HyperVolumeANC";
@@ -29,6 +30,7 @@ final class HyperVolumeAncSettings {
     private static volatile boolean loaded;
     private static volatile boolean moduleEnabled = true;
     private static volatile boolean cycleIncludeOff;
+    private static volatile String cycleModes = "nc_transparency";
     private static volatile boolean islandNotification = true;
 
     private HyperVolumeAncSettings() {
@@ -50,6 +52,11 @@ final class HyperVolumeAncSettings {
 
     static boolean cycleIncludesOff() {
         return cycleIncludeOff;
+    }
+
+    /** 音量面板按钮的循环方式，由设置页显式指定。 */
+    static String cycleModes() {
+        return cycleModes;
     }
 
     /** 切换降噪 / 通透时是否显示超级岛提示。 */
@@ -75,11 +82,14 @@ final class HyperVolumeAncSettings {
                     moduleEnabled = intent.getBooleanExtra(EXTRA_MODULE_ENABLED, moduleEnabled);
                     cycleIncludeOff = intent.getBooleanExtra(
                             EXTRA_CYCLE_INCLUDE_OFF, cycleIncludeOff);
+                    cycleModes = intent.getStringExtra(EXTRA_CYCLE_MODES) != null
+                            ? intent.getStringExtra(EXTRA_CYCLE_MODES) : cycleModes;
                     islandNotification = intent.getBooleanExtra(
                             EXTRA_ISLAND_NOTIFICATION, islandNotification);
                     loaded = true;
                     Log.i(TAG, "module options changed enabled=" + moduleEnabled
                             + " includeOff=" + cycleIncludeOff
+                            + " cycleModes=" + cycleModes
                             + " island=" + islandNotification);
                     notifyChanged();
                 }
@@ -99,6 +109,7 @@ final class HyperVolumeAncSettings {
         boolean previousEnabled = moduleEnabled;
         boolean previousIncludeOff = cycleIncludeOff;
         boolean previousIsland = islandNotification;
+        String previousCycleModes = cycleModes;
         try {
             Bundle result = context.getContentResolver().call(CONFIG_URI, METHOD_GET, null, null);
             if (result == null) {
@@ -106,10 +117,15 @@ final class HyperVolumeAncSettings {
             }
             moduleEnabled = result.getBoolean(EXTRA_MODULE_ENABLED, true);
             cycleIncludeOff = result.getBoolean(EXTRA_CYCLE_INCLUDE_OFF, false);
+            String modes = result.getString(EXTRA_CYCLE_MODES);
+            if (modes != null) {
+                cycleModes = modes;
+            }
             islandNotification = result.getBoolean(EXTRA_ISLAND_NOTIFICATION, true);
             loaded = true;
             Log.i(TAG, "module options loaded enabled=" + moduleEnabled
                     + " includeOff=" + cycleIncludeOff
+                    + " cycleModes=" + cycleModes
                     + " island=" + islandNotification);
         } catch (Throwable error) {
             Log.w(TAG, "failed to read module options", error);
@@ -117,7 +133,8 @@ final class HyperVolumeAncSettings {
         }
         if (!hadValues || previousEnabled != moduleEnabled
                 || previousIncludeOff != cycleIncludeOff
-                || previousIsland != islandNotification) {
+                || previousIsland != islandNotification
+                || !previousCycleModes.equals(cycleModes)) {
             notifyChanged();
         }
     }

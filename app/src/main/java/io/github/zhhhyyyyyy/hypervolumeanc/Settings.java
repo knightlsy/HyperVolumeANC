@@ -14,6 +14,7 @@ final class Settings {
     static final String PREFS_NAME = "hypervolumeanc_settings";
     static final String KEY_MODULE_ENABLED = "module_enabled";
     static final String KEY_CYCLE_INCLUDE_OFF = "cycle_include_off";
+    static final String KEY_CYCLE_MODES = "cycle_modes";
     static final String KEY_ISLAND_NOTIFICATION = "island_notification";
     static final String KEY_OOBE_DONE = "oobe_done";
     static final String KEY_LANGUAGE = "app_language";
@@ -36,6 +37,16 @@ final class Settings {
     static final String NAV_FLOATING = "hyper_os_floating";
     static final String NAV_GLASS = "liquid_glass";
 
+    /**
+     * 音量面板按钮的循环方式。
+     *
+     * 模块无法可靠探测耳机是否支持通透（小米/AirPods 走系统接口，拿不到能力串），
+     * 所以这里由用户按自己的耳机显式指定，而不是猜测。
+     */
+    static final String CYCLE_NC_TRANSPARENCY = "nc_transparency";
+    static final String CYCLE_NC_OFF = "nc_off";
+    static final String CYCLE_FULL = "full";
+
     private static final String[] TARGETS = {
             "com.android.systemui",
             "com.xiaomi.bluetooth",
@@ -50,6 +61,27 @@ final class Settings {
 
     static boolean cycleIncludesOff(Context context) {
         return preferences(context).getBoolean(KEY_CYCLE_INCLUDE_OFF, false);
+    }
+
+    /**
+     * 音量面板按钮的循环方式。
+     * 默认读旧版遗留的布尔开关做迁移：老用户开了「包含关闭」即三态，否则两态。
+     */
+    static String getCycleModes(Context context) {
+        String stored = preferences(context).getString(KEY_CYCLE_MODES, null);
+        if (stored != null) {
+            return stored;
+        }
+        return cycleIncludesOff(context) ? CYCLE_FULL : CYCLE_NC_TRANSPARENCY;
+    }
+
+    static void setCycleModes(Context context, String value) {
+        preferences(context).edit()
+                .putString(KEY_CYCLE_MODES, value)
+                // 同步旧键，回退到旧版本时行为一致。
+                .putBoolean(KEY_CYCLE_INCLUDE_OFF, CYCLE_FULL.equals(value))
+                .apply();
+        notifyScopes(context);
     }
 
     /** 切到降噪 / 通透时是否用超级岛提示，默认开启。 */
@@ -162,6 +194,8 @@ final class Settings {
                                 moduleEnabled(appContext))
                         .putExtra(ModuleConfigProvider.EXTRA_CYCLE_INCLUDE_OFF,
                                 cycleIncludesOff(appContext))
+                        .putExtra(ModuleConfigProvider.EXTRA_CYCLE_MODES,
+                                getCycleModes(appContext))
                         .putExtra(ModuleConfigProvider.EXTRA_ISLAND_NOTIFICATION,
                                 islandNotification(appContext)));
             } catch (Throwable ignored) {
