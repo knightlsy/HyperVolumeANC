@@ -22,12 +22,12 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install platform and build tools
+      # 用 runner 预装的 Android SDK，并补装 API 37 平台（compileSdk = 37）
+      - name: Install platform 37
         run: |
-          sdkmanager "platforms;android-37.0" "build-tools;37.0.0"
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.0" "build-tools;37.0.0"
 
       - name: Cache Gradle
         uses: actions/cache@v4
