@@ -56,15 +56,24 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon assembleRelease
 
+      # 资产名跟上游保持一致，方便应用内更新与文档引用。
+      - name: Rename APK
+        run: |
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk \
+             "dist/HyperVolumeANC-v${VERSION}-release.apk"
+          ls -l dist
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: HyperVolumeANC-release
-          path: app/build/outputs/apk/release/*.apk
+          path: dist/*.apk
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/release/*.apk
+          files: dist/*.apk
           generate_release_notes: true
